@@ -21,17 +21,28 @@ def first_test():
     ##div class="instructions" is the pop up instructions use .click() method to get rid
     driver.implicitly_wait(1.5)
 
-    search_box = driver.find_element(by=By.ID, value="keyboard")
-    #search_button = driver.find_element(by=By.NAME, value="btnK")
-    search_box.clear()
-    search_box.send_keys("query")
-    search_box.send_keys(Keys.RETURN)
-    #search_button.click()
-
-    #search_box = driver.find_element(by=By.NAME, value="q")
-    #assert search_box.get_attribute("value") == "query"
-
-    #driver.quit()
+    exit_inst = driver.find_element(by=By.XPATH, value="/html/body") ##this gets rid of the pop up menu, need to check what
+    #happens when browser is in night mode
+    exit_inst.click()
+    exit_inst.clear
+    driver.implicitly_wait(1.0)
+    
+    ##this does not work cannot find keyboard, try xpath seems to work better
+    #keyboard elemnts are shadow root, special way to interact with them
+    #<game-app>
+    root = driver.find_element(by=By.TAG_NAME, value="game-app") #shadow-host
+    #shadow_dom1 = driver.execute_script('return arguments[0].shadowRoot', root)
+    shadow_dom1 = driver.execute_script(root)
+    shadow_dom1.find_element(by = By.TAG_NAME, value="game-theme-manager")
+    shadow_dom2 = shadow_dom1.find_element(by=By.ID, value="game")
+    shadow_dom3 = shadow_dom2.find_element(by=By.TAG_NAME, value="game-keyboard")
+    shadow_dom4 = shadow_dom3.find_element(by=By.ID, value="keyboard")
+    shadow_dom4.find_element(by=By.XPATH, value="/div/div[1]/button[1]").click()
+    
+    #search_box.click()
+    #search_box.clear()
+    #search_box.send_keys(Keys.ENTER)
+    #search_box.send_keys(Keys.RETURN)
     driver.close()
 
 
